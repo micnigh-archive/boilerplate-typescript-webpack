@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "es6",
     "module": "commonjs",
     "noEmit": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "isolatedModules": true
   },
   "compileOnSave": false,
   "exclude": [
