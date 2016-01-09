@@ -10,12 +10,14 @@ module.exports = {
   entry: {
     app: isDev ? [
       "webpack-hot-middleware/client",
-      "./client/src/app.ts",
+      "./client/src/app.tsx",
     ] : [
-      "./client/src/app.ts",
+      "./client/src/app.tsx",
     ],
     lib: [
-      "underscore",
+      "react",
+      "react-dom",
+      "react-router",
       "es5-shim",
       "es5-shim/es5-sham",
       "regenerator/runtime",
@@ -35,7 +37,7 @@ module.exports = {
     loaders: [{
       test: /\.ts(x?)$/,
       exclude: [
-        /node_modules/,
+        "node_modules",
       ],
       loaders: [
         "babel-loader?presets[]=es2015&cacheDirectory",
