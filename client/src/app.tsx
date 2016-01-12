@@ -8,6 +8,10 @@ import "regenerator/runtime";
 
 import HelloWorld from "./component/HelloWorld";
 
+let appStyle = require("./app.scss").use();
+
+console.log("test test");
+
 ReactDOM.render(
   <HelloWorld name="Test"/>,
   document.getElementById("content")

@@ -3,9 +3,9 @@
     "target": "es6",
     "module": "commonjs",
     "jsx": "react",
-    "noEmit": true,
     "experimentalDecorators": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "moduleResolution": "node"
   },
   "compileOnSave": false,
   "exclude": [

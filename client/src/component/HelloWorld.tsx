@@ -1,5 +1,7 @@
 import * as React from "react";
 
+console.log("test test");
+
 export interface IHelloWorldProps {
   name: string;
 };

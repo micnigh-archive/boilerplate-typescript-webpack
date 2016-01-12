@@ -4,16 +4,9 @@ var distPath = isDev ? "./.tmp/development/" : "./.tmp/production/";
 var webpack = require("webpack");
 var WebpackNotifierPlugin = require("webpack-notifier");
 
-module.exports = {
-  cache: true,
-  devtool: "#cheap-module-source-map",
+var config = {
   entry: {
-    app: isDev ? [
-      "webpack-hot-middleware/client",
-      "./client/src/app.tsx",
-    ] : [
-      "./client/src/app.tsx",
-    ],
+    app: "./client/src/app.tsx",
     lib: [
       "react",
       "react-dom",
@@ -23,21 +16,11 @@ module.exports = {
       "regenerator/runtime",
     ],
   },
-  devServer: {
-    contentBase: "server/public/",
-    hot: true,
-    inline: true,
-  },
-  output: {
-    path: distPath,
-    filename: "[name].js",
-    chunkFilename: "[chunkhash].js"
-  },
   module: {
     loaders: [{
       test: /\.ts(x?)$/,
       exclude: [
-        "node_modules",
+        /node_modules/,
       ],
       loaders: [
         "babel-loader?presets[]=es2015&cacheDirectory",
@@ -56,16 +39,46 @@ module.exports = {
       includePaths: [],
     },
   },
-  plugins: isDev ? [
+  devServer: {
+    contentBase: "server/public/",
+    hot: true,
+    inline: true,
+  },
+  output: {
+    path: distPath,
+    filename: "[name].js",
+    chunkFilename: "[chunkhash].js"
+  },
+  plugins: [
     new webpack.optimize.CommonsChunkPlugin({ name: "lib", filename: "lib.js" }),
-    new webpack.HotModuleReplacementPlugin(),
-    new WebpackNotifierPlugin({ title: "Webpack build", excludeWarnings: true })
-  ] : [
-    new webpack.optimize.CommonsChunkPlugin({ name: "lib", filename: "lib.js" }),
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin()
+    new WebpackNotifierPlugin({ title: "Webpack build", excludeWarnings: true }),
   ],
   resolve: {
-    extensions: [ "", ".webpack.js", ".web.js", ".ts", ".tsx", ".js" ]
+    extensions: [ "", ".webpack.js", ".web.js", ".ts", ".tsx", ".js" ],
+    moduleDirectories: [
+      "client/src/",
+    ],
   },
 };
+
+if (isDev) {
+  config.cache = true;
+  //config.devtool = "inline-source-map";
+  config.output.pathinfo = true;
+  config.entry.lib = config.entry.lib.concat(["webpack-hot-middleware/client"]);
+  config.plugins = [
+    new webpack.SourceMapDevToolPlugin({
+      exclude: [
+        "lib.js",
+      ],
+    }),
+    new webpack.HotModuleReplacementPlugin(),
+  ].concat(config.plugins);
+} else {
+  config.plugins = config.plugins.concat([
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.UglifyJsPlugin(),
+  ]);
+}
+
+module.exports = config;
